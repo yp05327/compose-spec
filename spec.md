@@ -2483,6 +2483,7 @@ application. The source of the secret is either `file` or `environment`.
 
 - `file`: The secret is created with the contents of the file at the specified path.
 - `environment`: The secret is created with the value of an environment variable.
+- `content`: The content is created with the inlined value.
 - `external`: If set to true, `external` specifies that this secret has already been created. Compose does
   not attempt to create it, and if it does not exist, an error occurs.
 - `name`: The name of the secret object in Docker. This field can be used to
@@ -2502,7 +2503,7 @@ secrets:
 
 ## Example 2 
 
-`token` secret  is created as `<project_name>_token` when the application is deployed,
+`token` secret is created as `<project_name>_token` when the application is deployed,
 by registering the content of the `OAUTH_TOKEN` environment variable as a platform secret.
 
 ```yml
@@ -2519,7 +2520,22 @@ secrets:
     external: true
 ```
 
-## Example 3
+## Example 3 
+
+`admin_authorization` secret is created as `<project_name>_admin_authorization` when the application is deployed,
+by registering the inlined content of as a platform secret. This comes with the
+benefits Compose will infer variables when creating the secret, which allows to
+adjust content according to service configuration:
+
+```yml
+secrets:
+  admin_authorization:
+    content: |
+      admin.username=${ADMIN_USERNAME}
+      admin.password=${ADMIN_PASSWORD}
+```
+
+## Example 4
 
 External secrets lookup can also use a distinct key by specifying a `name`. 
 
